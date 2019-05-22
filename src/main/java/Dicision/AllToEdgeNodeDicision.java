@@ -18,17 +18,19 @@ public class AllToEdgeNodeDicision implements Dicision {
                 IOUtils.println("SDN", "调度第" + (++taskCount) + "个任务，来自设备：" + originTerminal.getId() + "的请求，请求量" + request.getData());
                 float minWaitTimeInEdgeNode=Integer.MAX_VALUE;
                 EdgeNode condidateEdgeNode=null;
-                for(EdgeNode edgeNode:SDN.getEdgeNodeList()){
-                    FogBlockQueue<Request> queue=edgeNode.getQueue();
-                    //缓存不够
-                    if(queue.getRemainCapcity()<request.getData()){
-                        continue;
-                    }
-                    //计算出在该节点上的排队时延
-                    float waitTimeInThisEdgeNode=(queue.getCapacity()-queue.getRemainCapcity())/Global.EDGENODEFREQUENCE;
-                    if(waitTimeInThisEdgeNode<minWaitTimeInEdgeNode){
-                        minWaitTimeInEdgeNode=waitTimeInThisEdgeNode;
-                        condidateEdgeNode=edgeNode;
+                while (condidateEdgeNode==null){
+                    for(EdgeNode edgeNode:SDN.getEdgeNodeList()){
+                        FogBlockQueue<Request> queue=edgeNode.getQueue();
+                        //缓存不够
+                        if(queue.getRemainCapcity()<request.getData()){
+                            continue;
+                        }
+                        //计算出在该节点上的排队时延
+                        float waitTimeInThisEdgeNode=(queue.getCapacity()-queue.getRemainCapcity())/Global.EDGENODEFREQUENCE;
+                        if(waitTimeInThisEdgeNode<minWaitTimeInEdgeNode){
+                            minWaitTimeInEdgeNode=waitTimeInThisEdgeNode;
+                            condidateEdgeNode=edgeNode;
+                        }
                     }
                 }
                 //如果边缘节点和终端设备的缓存都不足,拒绝任务

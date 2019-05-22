@@ -25,17 +25,22 @@ public class STMDicision implements Dicision{
                 float minWaitTimeInEdgeNode=Integer.MAX_VALUE;
                 EdgeNode condidateEdgeNode=null;
                 //选择等待时延最短的边缘节点
-                for(EdgeNode edgeNode:SDN.getEdgeNodeList()){
-                    FogBlockQueue<Request> queue=edgeNode.getQueue();
-                    //缓存不够
-                    if(queue.getRemainCapcity()<request.getData()){
-                        continue;
+                while(condidateEdgeNode==null){
+                    for(EdgeNode edgeNode:SDN.getEdgeNodeList()){
+                        FogBlockQueue<Request> queue=edgeNode.getQueue();
+                        //缓存不够
+                        if(queue.getRemainCapcity()<request.getData()){
+                            continue;
+                        }
+                        //计算出在该节点上的排队时延
+                        float waitTimeInThisEdgeNode=(queue.getCapacity()-queue.getRemainCapcity())/Global.EDGENODEFREQUENCE;
+                        if(waitTimeInThisEdgeNode<minWaitTimeInEdgeNode){
+                            minWaitTimeInEdgeNode=waitTimeInThisEdgeNode;
+                            condidateEdgeNode=edgeNode;
+                        }
                     }
-                    //计算出在该节点上的排队时延
-                    float waitTimeInThisEdgeNode=(queue.getCapacity()-queue.getRemainCapcity())/Global.EDGENODEFREQUENCE;
-                    if(waitTimeInThisEdgeNode<minWaitTimeInEdgeNode){
-                        minWaitTimeInEdgeNode=waitTimeInThisEdgeNode;
-                        condidateEdgeNode=edgeNode;
+                    if(condidateEdgeNode==null&&originTerminal.getQueue().getRemainCapcity()>=request.getData()){
+                        break;
                     }
                 }
                 //如果边缘节点和终端设备的缓存都不足,拒绝任务

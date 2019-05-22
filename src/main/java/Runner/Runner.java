@@ -40,7 +40,7 @@ public class Runner {
         switch (decisionName){
             case "stmDicision":
                 Help.getSDN().setDicision(new STMDicision());
-                Global.resultFilePath+="stmDicision\\edge"+Global.EDGENODENUM+"_terminal_400"+Global.TERMINLNUM;
+                Global.resultFilePath+="stmDicision\\edge"+Global.EDGENODENUM+"_terminal"+Global.TERMINLNUM;
                 break;
             case "allToEdgeNodeDicision":
                 Help.getSDN().setDicision(new AllToEdgeNodeDicision());

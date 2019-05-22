@@ -5,17 +5,17 @@ public class Global {
     public final static int lambda=100; //1秒生成100个任务
 
     //终端设备数量
-    public final static int TERMINLNUM=200;
+    public final static int TERMINLNUM=100;
 
     //边缘节点数量
-    public final static int EDGENODENUM=50;
+    public final static int EDGENODENUM=10;
 
 
     //每个终端发出的请求数量
-    public final static int REQUESTNUM=500;
+    public final static int REQUESTNUM=1000;
 
     //终端设备处理能力
-    public final static float TERMINALFREQUENCE=400; //单位时间内能处理40kb字节
+    public final static float TERMINALFREQUENCE=100; //单位时间内能处理100kb字节
 
     //边缘节点处理能力 是终端处理能力的500倍
     public final static float EDGENODEFREQUENCE=20480; //单位时间能处理20480kb（20M）字节
@@ -32,7 +32,7 @@ public class Global {
     //在终端消耗计算资源的开支为每单位时间消耗10开支
     public final static int CostPRInTerminal=10;
     //在边缘节点消耗计算资源的开支为终端的100倍
-    public final static int CostPRInEdgeNode=CostPRInTerminal*1000;
+    public final static int CostPRInEdgeNode=CostPRInTerminal*100;
 
     public static String resultFilePath="F:\\Literature\\第一个点\\";
 

@@ -66,7 +66,7 @@ public class Help {
         if(threadPoolExecutor==null){
             synchronized (Help.class){
                 if(threadPoolExecutor==null){
-                    threadPoolExecutor=new ThreadPoolExecutor(200,1000,500,TimeUnit.MILLISECONDS,new ArrayBlockingQueue<Runnable>(10));
+                    threadPoolExecutor=new ThreadPoolExecutor(100,1000,500,TimeUnit.MILLISECONDS,new ArrayBlockingQueue<Runnable>(10));
                 }
             }
         }
