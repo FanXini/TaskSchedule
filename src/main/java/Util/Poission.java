@@ -38,8 +38,8 @@ public class Poission {
 //           System.out.println(poission.arrival_time[i]);
 //        }
         double data=0;
-        for(int i=0;i<50;i++){
-            double next=nextTime(50);
+        for(int i=0;i<10;i++){
+            double next=nextTime(10);
             data+=next;
             System.out.println(next);
         }

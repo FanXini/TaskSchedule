@@ -37,6 +37,7 @@ public class FogBlockQueue<T> {
             T t= items.pop();
             Request request=(Request) t;
             remainCapcity+=request.getData();
+            System.out.println(serial+":remain="+remainCapcity);
             notFull.signalAll();
             return t;
         }finally {
@@ -55,7 +56,6 @@ public class FogBlockQueue<T> {
             }
             items.push(t);
             remainCapcity-=((Request) t).getData();
-            System.out.println(serial+":remain="+remainCapcity);
             notEmpty.signalAll();
         }finally {
             lock.unlock();

@@ -3,6 +3,7 @@ package Runner;
 import Dicision.AllToEdgeNodeDicision;
 import Dicision.STMDicision;
 import Util.Help;
+import Util.IOUtils;
 import entity.EdgeNode;
 import entity.Global;
 import entity.SDN;
@@ -52,17 +53,18 @@ public class Runner {
         //启动SDN
         threadPoolExecutor.execute(Help.getSDN().getDicision());
         //启动终端设备
+        long processStartTime=System.currentTimeMillis();
         for(Terminal terminal:terminalList){
             terminal.run();
         }
         try{
-            Thread.sleep(30000);
-            Float num=Help.toltalCost;
-            String str=new BigDecimal(num.toString()).toString();
-            System.out.println(str);
-            System.out.println("拒绝量："+Help.refuseCount);
-        }catch (Exception e){
-
+            Help.getCountDownLatch().await();
+            Help.totalProcessTime=(System.currentTimeMillis()-processStartTime)/1000;
+            System.out.println("执行完毕,耗时："+ Help.totalProcessTime);
+            System.out.println("执行完毕,开支："+ Help.toltalCost);
+            IOUtils.println("SDN","执行完毕,耗时："+ Help.totalProcessTime);
+        }catch (InterruptedException e){
+            e.printStackTrace();
         }
     }
 }

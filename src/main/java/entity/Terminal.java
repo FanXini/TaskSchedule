@@ -20,7 +20,7 @@ public class Terminal {
 
     private FogBlockQueue<Request> queue;
 
-    private float currentRequestNeedTime = 0;
+    private volatile float currentRequestNeedTime = 0;
 
     public Terminal(int id, float frequent) {
         this.id = id;
@@ -63,13 +63,17 @@ public class Terminal {
         @Override
         public void run() {
             while (true) {
-                currentRequestNeedTime = 0;
                 try {
+//                    if(Help.scheduleCompleteFlag&&Math.abs(queue.getRemainCapcity()-queue.getCapacity())<1){
+//                        System.out.println("terminal"+id+"执行完成");
+//                        Help.getCountDownLatch().countDown();
+//                        break;
+//                    }
                     Request request = queue.take();
                     IOUtils.println("terminal" + id,"处理第"+request.getId()+"个任务");
                     currentRequestNeedTime = (request.getData() / frequent) * 1000; //转换为millis
 
-                    float lastTime = System.currentTimeMillis();
+                    long lastTime = System.currentTimeMillis();
                     for (; ; ) { //自旋
                         if (currentRequestNeedTime <= 0) {
                             break;
@@ -78,7 +82,7 @@ public class Terminal {
                             TimeUnit.MILLISECONDS.sleep((int) currentRequestNeedTime);
                         }
                         long now = System.currentTimeMillis();
-                        currentRequestNeedTime -= now - lastTime;
+                        currentRequestNeedTime -= (now-lastTime);
                         lastTime = now;
                     }
                 } catch (Exception e) {
@@ -86,6 +90,10 @@ public class Terminal {
                 }
             }
         }
+    }
+
+    public float getCurrentRequestNeedTime(){
+        return currentRequestNeedTime/1000;
     }
 
 }

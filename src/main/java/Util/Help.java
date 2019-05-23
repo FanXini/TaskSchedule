@@ -1,5 +1,7 @@
 package Util;
 
+import Dicision.AllToEdgeNodeDicision;
+import Dicision.STMDicision;
 import entity.*;
 
 import java.io.IOException;
@@ -7,10 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -19,13 +18,18 @@ public class Help {
 
     private static volatile SDN SDN;
 
-    private static ThreadPoolExecutor threadPoolExecutor;
+    private volatile static ThreadPoolExecutor threadPoolExecutor;
+
+    private volatile static CountDownLatch countDownLatch;
 
     public static float toltalCost=0;
 
+    public static float totalProcessTime=0;
+
     public static int  refuseCount=0;
 
-    private static Lock lock=new ReentrantLock();
+    public static boolean scheduleCompleteFlag=false;
+
 
     public static void createDir(String dirName){
         try{
@@ -73,14 +77,30 @@ public class Help {
         return threadPoolExecutor;
     }
 
-    public static void addCost(float cost){
-        lock.lock();
-        try {
-            toltalCost+=cost;
-        }finally {
-            lock.unlock();
+    public static CountDownLatch getCountDownLatch(){
+        if(countDownLatch==null){
+            synchronized (Help.class){
+                if(countDownLatch==null){
+                    switch (Global.dicisionName){
+                        case "stmDicision":
+                            countDownLatch=new CountDownLatch(Global.TERMINLNUM+Global.EDGENODENUM);
+                            break;
+                        case "allToEdgeNodeDicision":
+                            countDownLatch=new CountDownLatch(Global.EDGENODENUM);
+                            break;
+                        default:throw new IllegalArgumentException("没有对应的决策器");
+                    }
+                }
+            }
         }
+        return  countDownLatch;
     }
+
+
+    public static void addCost(float cost){
+            toltalCost+=cost;
+    }
+
 
 
 }
