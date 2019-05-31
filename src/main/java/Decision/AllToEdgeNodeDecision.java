@@ -1,4 +1,4 @@
-package Dicision;
+package Decision;
 
 import Util.Help;
 import Util.IOUtils;
@@ -6,17 +6,17 @@ import entity.*;
 
 import java.math.BigDecimal;
 
-public class AllToEdgeNodeDicision implements Dicision {
+public class AllToEdgeNodeDecision extends AbstractDecision {
     @Override
     public void dicision() {
-        int taskCount = 0;
         SDN SDN = Help.getSDN();
         while (true) {
             try {
                 Request request = SDN.getRequestsQueue().take();
                 long decisionStartTime=System.currentTimeMillis();
                 Terminal originTerminal = request.getTerminal();
-                IOUtils.println("SDN", "调度第" + (++taskCount) + "个任务，来自设备：" + originTerminal.getId() + "的请求，请求量" + request.getData());
+                taskCount++;
+                //IOUtils.println("SDN", "调度第" + (++taskCount) + "个任务，来自设备：" + originTerminal.getId() + "的请求，请求量" + request.getData());
                 float minWaitTimeInEdgeNode=Integer.MAX_VALUE;
                 EdgeNode condidateEdgeNode=null;
                 while (condidateEdgeNode==null){
@@ -46,15 +46,10 @@ public class AllToEdgeNodeDicision implements Dicision {
                     float costInEdgeNode=totalDelay+processDelayInEdge*Global.CostPRInEdgeNode;
                     condidateEdgeNode.getQueue().put(request);
                     Help.addCost(costInEdgeNode);
-                    IOUtils.println("SDN","将任务调度给"+condidateEdgeNode.getId()+"号边缘结点");
+                   // IOUtils.println("SDN","将任务调度给"+condidateEdgeNode.getId()+"号边缘结点");
                 }
-                if(taskCount>=Global.TERMINLNUM*Global.REQUESTNUM){
-                    //决策完成
-                    Help.scheduleCompleteFlag=true;
-                    Float num=Help.toltalCost;
-                    String str=new BigDecimal(num.toString()).toString();
-                    IOUtils.println("SDN","totalCost"+ str);
-                    IOUtils.println("SDN","总任务数量："+taskCount+"\n拒绝量："+Help.refuseCount+"\n拒绝率："+(float)Help.refuseCount/taskCount);
+                if(isStoppingConditionReached()){
+                    break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();

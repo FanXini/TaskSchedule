@@ -1,10 +1,9 @@
 package entity;
 
-import Dicision.Dicision;
+import Decision.Decision;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedTransferQueue;
 
@@ -15,7 +14,7 @@ public class SDN {
 
     private List<EdgeNode> edgeNodeList;  //维护边缘节点信息
 
-    private Dicision dicision;
+    private Decision dicision;
 
     public SDN(){
         requestsQueue=new LinkedTransferQueue<>();

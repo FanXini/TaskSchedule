@@ -1,7 +1,5 @@
 package Util;
 
-import Dicision.AllToEdgeNodeDicision;
-import Dicision.STMDicision;
 import entity.*;
 
 import java.io.IOException;
@@ -10,9 +8,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Help {
 
@@ -28,7 +23,7 @@ public class Help {
 
     public static int  refuseCount=0;
 
-    public static boolean scheduleCompleteFlag=false;
+    public static volatile boolean scheduleCompleteFlag=false;
 
 
     public static void createDir(String dirName){
@@ -81,12 +76,15 @@ public class Help {
         if(countDownLatch==null){
             synchronized (Help.class){
                 if(countDownLatch==null){
-                    switch (Global.dicisionName){
-                        case "stmDicision":
-                            countDownLatch=new CountDownLatch(Global.TERMINLNUM+Global.EDGENODENUM);
+                    switch (Global.decisionName){
+                        case "stsDecision":
+                            countDownLatch=new CountDownLatch(Global.EDGENODENUM+Global.TERMINLNUM);
                             break;
-                        case "allToEdgeNodeDicision":
+                        case "allToEdgeNodeDecision":
                             countDownLatch=new CountDownLatch(Global.EDGENODENUM);
+                            break;
+                        case "mtsDecision":
+                            countDownLatch=new CountDownLatch(Global.EDGENODENUM+Global.TERMINLNUM);
                             break;
                         default:throw new IllegalArgumentException("没有对应的决策器");
                     }

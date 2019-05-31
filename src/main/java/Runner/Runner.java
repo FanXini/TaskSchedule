@@ -1,16 +1,15 @@
 package Runner;
 
-import Dicision.AllToEdgeNodeDicision;
-import Dicision.STMDicision;
+import Decision.AllToEdgeNodeDecision;
+import Decision.MTSDecision;
+import Decision.STSDecision;
 import Util.Help;
 import Util.IOUtils;
 import entity.EdgeNode;
 import entity.Global;
-import entity.SDN;
 import entity.Terminal;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 @Data
@@ -39,13 +38,17 @@ public class Runner {
             threadPoolExecutor.execute(edgeNode);
         }
         switch (decisionName){
-            case "stmDicision":
-                Help.getSDN().setDicision(new STMDicision());
-                Global.resultFilePath+="stmDicision\\edge"+Global.EDGENODENUM+"_terminal"+Global.TERMINLNUM;
+            case "stsDecision":
+                Help.getSDN().setDicision(new STSDecision());
+                Global.resultFilePath+="stsDecision\\edge"+Global.EDGENODENUM+"_terminal"+Global.TERMINLNUM;
                 break;
-            case "allToEdgeNodeDicision":
-                Help.getSDN().setDicision(new AllToEdgeNodeDicision());
+            case "allToEdgeNodeDecision":
+                Help.getSDN().setDicision(new AllToEdgeNodeDecision());
                 Global.resultFilePath+="allToEdgeNodeDicision\\edge"+Global.EDGENODENUM+"_terminal"+Global.TERMINLNUM;
+                break;
+            case "mtsDecision":
+                Help.getSDN().setDicision(new MTSDecision());
+                Global.resultFilePath+="mtsDecision\\edge"+Global.EDGENODENUM+"_terminal"+Global.TERMINLNUM;
                 break;
             default:throw new IllegalArgumentException("没有对应的决策器");
         }
@@ -59,10 +62,15 @@ public class Runner {
         }
         try{
             Help.getCountDownLatch().await();
-            Help.totalProcessTime=(System.currentTimeMillis()-processStartTime)/1000;
+            Help.getThreadPool().shutdown();
+            for(EdgeNode edgeNode:edgeNodeList){
+                if(edgeNode.getTotalProcessTime()>Help.totalProcessTime){
+                    Help.totalProcessTime=edgeNode.getTotalProcessTime();
+                }
+            }
+            IOUtils.println("SDN","执行完毕,耗时："+ Help.totalProcessTime);
             System.out.println("执行完毕,耗时："+ Help.totalProcessTime);
             System.out.println("执行完毕,开支："+ Help.toltalCost);
-            IOUtils.println("SDN","执行完毕,耗时："+ Help.totalProcessTime);
         }catch (InterruptedException e){
             e.printStackTrace();
         }

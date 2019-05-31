@@ -2,12 +2,15 @@ package entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 @Data
-public class FogBlockQueue<T> {
+public class FogBlockQueue<T> implements Serializable{
+    private static final long serialVersionUID = 58545926219288207L;
     private String serial;
     private Lock lock;
     private Float capacity;
@@ -45,6 +48,30 @@ public class FogBlockQueue<T> {
         }
     }
 
+    public T poll(long timeout, TimeUnit unit) throws  InterruptedException{
+        long nanos = unit.toNanos(timeout);
+        final Lock lock=this.lock;
+        lock.lockInterruptibly();
+        try{
+            while (getSize()==0){
+                if(nanos<=0){
+                    return null;
+                }
+                nanos=notEmpty.awaitNanos(nanos);
+            }
+            T t= items.pop();
+            Request request=(Request) t;
+            remainCapcity+=request.getData();
+            //System.out.println(serial+":remain="+remainCapcity);
+            notFull.signalAll();
+            return t;
+        }finally {
+            lock.unlock();
+        }
+
+
+    }
+
     public void put(T t) throws InterruptedException{
         checkNotNull(t);
         final Lock lock=this.lock;
@@ -62,7 +89,7 @@ public class FogBlockQueue<T> {
         }
     }
 
-    private int getSize(){
+    public int getSize(){
         return items.size();
     }
 

@@ -1,13 +1,12 @@
-package Dicision;
+package Decision;
 
 import Util.Help;
 import Util.IOUtils;
 import entity.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 
-public class STMDicision implements Dicision{
+public class STSDecision extends AbstractDecision {
     @Override
     public void run() {
         dicision();
@@ -15,13 +14,13 @@ public class STMDicision implements Dicision{
 
     public void dicision() {
         SDN SDN= Help.getSDN();
-        int taskCount=0;
         while (true){
             try{
                 Request request=SDN.getRequestsQueue().take();
                 long decisionStartTime=System.currentTimeMillis();
                 Terminal originTerminal=request.getTerminal();
-                IOUtils.println("SDN","调度第"+(++taskCount)+"个任务，来自设备："+originTerminal.getId()+"的请求，请求量"+request.getData());
+                taskCount++;
+                //IOUtils.println("SDN","调度第"+(++taskCount)+"个任务，来自设备："+originTerminal.getId()+"的请求，请求量"+request.getData());
                 float minWaitTimeInEdgeNode=Integer.MAX_VALUE;
                 EdgeNode condidateEdgeNode=null;
                 //选择等待时延最短的边缘节点
@@ -57,7 +56,7 @@ public class STMDicision implements Dicision{
                     float costInEdgeNode=totalDelay+processDelayInEdge*Global.CostPRInEdgeNode;
                     condidateEdgeNode.getQueue().put(request);
                     Help.addCost(costInEdgeNode);
-                    IOUtils.println("SDN","将任务调度给"+condidateEdgeNode.getId()+"号边缘结点");
+                    //IOUtils.println("SDN","将任务调度给"+condidateEdgeNode.getId()+"号边缘结点");
                 }
                 //如果边缘节点的缓存不足,但终端有足够的缓存，任务直接发送给终端
                 else if(originTerminal.getQueue().getRemainCapcity()>request.getData()&&condidateEdgeNode==null){
@@ -68,7 +67,7 @@ public class STMDicision implements Dicision{
                     float costInTerminal=totalDelay+proccessDelayInTerminal*Global.CostPRInTerminal;
                     originTerminal.getQueue().put(request);
                     Help.addCost(costInTerminal);
-                    IOUtils.println("SDN","将任务调度给"+originTerminal.getId()+"号终端");
+                    //IOUtils.println("SDN","将任务调度给"+originTerminal.getId()+"号终端");
                 }
                 else if (originTerminal.getQueue().getRemainCapcity()>=request.getData()&&condidateEdgeNode!=null){
                     float processDelayInEdge=request.getData()/Global.EDGENODEFREQUENCE;
@@ -83,20 +82,14 @@ public class STMDicision implements Dicision{
                     if(costInEdgeNode<=costInTerminal){
                         condidateEdgeNode.getQueue().put(request);
                         Help.addCost(costInEdgeNode);
-                        IOUtils.println("SDN","将任务调度给"+condidateEdgeNode.getId()+"号边缘结点");
+                        //IOUtils.println("SDN","将任务调度给"+condidateEdgeNode.getId()+"号边缘结点");
                     }else{
                         originTerminal.getQueue().put(request);
                         Help.addCost(costInTerminal);
-                        IOUtils.println("SDN","将任务调度给"+originTerminal.getId()+"号终端");
+                        //IOUtils.println("SDN","将任务调度给"+originTerminal.getId()+"号终端");
                     }
                 }
-                if(taskCount>=Global.TERMINLNUM*Global.REQUESTNUM){
-                    //决策完成
-                    Help.scheduleCompleteFlag=true;
-                    Float num=Help.toltalCost;
-                    String str=new BigDecimal(num.toString()).toString();
-                    IOUtils.println("SDN","totalCost"+ str);
-                    IOUtils.println("SDN","总任务数量："+taskCount+"\n拒绝量："+Help.refuseCount+"\n拒绝率："+(float)Help.refuseCount/taskCount);
+                if(isStoppingConditionReached()){
                     break;
                 }
             }catch (Exception e){

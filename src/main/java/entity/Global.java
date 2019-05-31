@@ -1,21 +1,27 @@
 package entity;
 
+import java.util.concurrent.ArrayBlockingQueue;
+
 public class Global {
 
-    public final static String dicisionName="stmDicision";
-    //public final static String dicisionName="allToEdgeNodeDicision";
 
-    public final static int lambda=100; //1秒生成100个任务
+    /*决策算法选择*/
+    //public final static String decisionName="stsDecision";
+    //public final static String decisionName="allToEdgeNodeDecision";
+    public final static String decisionName="mtsDecision";
+
+    public final static int lambda=50; //任务到达频率
+
 
     //终端设备数量
-    public final static int TERMINLNUM=60;
+    public final static int TERMINLNUM=50;
 
     //边缘节点数量
     public final static int EDGENODENUM=10;
 
 
     //每个终端发出的请求数量
-    public final static int REQUESTNUM=1000;
+    public final static int REQUESTNUM=500;
 
     //终端设备处理能力
     public final static float TERMINALFREQUENCE=500; //单位时间内能处理100kb字节
@@ -37,7 +43,7 @@ public class Global {
     //在边缘节点消耗计算资源的开支为终端的100倍
     public final static int CostPRInEdgeNode=CostPRInTerminal*100;
 
-    public static String resultFilePath="F:\\LiteratureTEST\\第一个点\\";
+    public static String resultFilePath="F:\\Literatur_5_31\\第一个点\\";
 
 
 }
