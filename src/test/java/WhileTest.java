@@ -1,4 +1,6 @@
+import entity.EdgeNode;
 import entity.Global;
+import entity.Terminal;
 import pso.Partical;
 
 import java.util.ArrayList;
@@ -21,6 +23,9 @@ public class WhileTest {
         int a[]=new int[10];
         int b=(int)Math.round(1.5);
         System.out.println(b);
+        EdgeNode edgeNode=new EdgeNode(1,1);
+       Thread thread=new Thread(edgeNode);
+       System.out.println("haha"+Runtime.getRuntime().availableProcessors());
 
 //        List<Integer> list=new ArrayList<>();
 //        list.add(2);

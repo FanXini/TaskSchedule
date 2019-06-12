@@ -43,7 +43,7 @@ public class Global {
     //在边缘节点消耗计算资源的开支为终端的100倍
     public final static int CostPRInEdgeNode=CostPRInTerminal*100;
 
-    public static String resultFilePath="F:\\Literatur_5_31\\第一个点\\";
+    public static String resultFilePath="F:\\A_LaboratoryData\\MyPaper\\边端调度\\";
 
 
 }

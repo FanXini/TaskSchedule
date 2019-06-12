@@ -45,7 +45,7 @@ public class AllToEdgeNodeDecision extends AbstractDecision {
                     //总开支=时延开支(传输+排队+执行)+资源消耗开支
                     float costInEdgeNode=totalDelay+processDelayInEdge*Global.CostPRInEdgeNode;
                     condidateEdgeNode.getQueue().put(request);
-                    Help.addCost(costInEdgeNode);
+                    addCost(costInEdgeNode);
                    // IOUtils.println("SDN","将任务调度给"+condidateEdgeNode.getId()+"号边缘结点");
                 }
                 if(isStoppingConditionReached()){

@@ -25,4 +25,10 @@ public abstract class AbstractDecision implements Decision {
             return false;
         }
     }
+
+    protected void  addCost(float cost){
+        if(taskCount>=1000){
+            Help.toltalCost+=cost;
+        }
+    }
 }

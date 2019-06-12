@@ -55,7 +55,7 @@ public class STSDecision extends AbstractDecision {
                     //总开支=时延开支(传输+排队+执行)+资源消耗开支
                     float costInEdgeNode=totalDelay+processDelayInEdge*Global.CostPRInEdgeNode;
                     condidateEdgeNode.getQueue().put(request);
-                    Help.addCost(costInEdgeNode);
+                    addCost(costInEdgeNode);
                     //IOUtils.println("SDN","将任务调度给"+condidateEdgeNode.getId()+"号边缘结点");
                 }
                 //如果边缘节点的缓存不足,但终端有足够的缓存，任务直接发送给终端
@@ -66,7 +66,7 @@ public class STSDecision extends AbstractDecision {
                     //总开支=时延开支(传输+排队+执行)+资源消耗开支
                     float costInTerminal=totalDelay+proccessDelayInTerminal*Global.CostPRInTerminal;
                     originTerminal.getQueue().put(request);
-                    Help.addCost(costInTerminal);
+                    addCost(costInTerminal);
                     //IOUtils.println("SDN","将任务调度给"+originTerminal.getId()+"号终端");
                 }
                 else if (originTerminal.getQueue().getRemainCapcity()>=request.getData()&&condidateEdgeNode!=null){
@@ -81,11 +81,11 @@ public class STSDecision extends AbstractDecision {
                     float costInTerminal=totalDelayInTerminal+proccessDelayInTerminal*Global.CostPRInTerminal;
                     if(costInEdgeNode<=costInTerminal){
                         condidateEdgeNode.getQueue().put(request);
-                        Help.addCost(costInEdgeNode);
+                        addCost(costInEdgeNode);
                         //IOUtils.println("SDN","将任务调度给"+condidateEdgeNode.getId()+"号边缘结点");
                     }else{
                         originTerminal.getQueue().put(request);
-                        Help.addCost(costInTerminal);
+                        addCost(costInTerminal);
                         //IOUtils.println("SDN","将任务调度给"+originTerminal.getId()+"号终端");
                     }
                 }

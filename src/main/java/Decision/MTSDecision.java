@@ -43,7 +43,8 @@ public class MTSDecision extends AbstractDecision {
                 for(Map.Entry<Request,List<Request>> entry:clusters.entrySet()){
                     PSO pso=new PSO(entry.getValue());
                     pso.run();
-                    Help.toltalCost+=(pso.getGlobalBestFitness()+ealta*(ealta-1)/(2* Global.lambda));
+                    float cost=(pso.getGlobalBestFitness()+ealta*(ealta-1)/(2* Global.lambda));
+                    addCost(cost);
                     int solution[]=pso.getGlobalBestSolution();
                     for(int i=0;i<solution.length;i++){
                         int des=solution[i];
