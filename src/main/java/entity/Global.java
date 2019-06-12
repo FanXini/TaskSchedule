@@ -14,7 +14,7 @@ public class Global {
 
 
     //终端设备数量
-    public final static int TERMINLNUM=50;
+    public final static int TERMINLNUM=10;
 
     //边缘节点数量
     public final static int EDGENODENUM=10;

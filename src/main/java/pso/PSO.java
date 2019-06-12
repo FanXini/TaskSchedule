@@ -13,7 +13,7 @@ public class PSO {
 
     public   int swarmSize=20;
 
-    public  int maxIterations=50;
+    public  int maxIterations=10;
 
     private List<Request> requests; //请求
 
@@ -76,6 +76,7 @@ public class PSO {
             if (partical.getBestFitness() < globalBestFitness) {
                 globalBestFitness = partical.getBestFitness();
                 globalBestSolution = partical.getBestSolution();
+                //System.out.println(globalBestFitness);
             }
         }
     }

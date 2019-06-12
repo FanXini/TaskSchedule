@@ -25,6 +25,8 @@ public class Help {
 
     public static volatile boolean scheduleCompleteFlag=false;
 
+    public static volatile boolean timerSwitch=false;
+
 
     public static void createDir(String dirName){
         try{

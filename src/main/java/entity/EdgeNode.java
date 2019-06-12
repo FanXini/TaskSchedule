@@ -40,7 +40,10 @@ public class EdgeNode implements Runnable,Serializable{
                 if(request!=null){
                     //IOUtils.println("edgeNode"+id,"执行终端：+"+request.getTerminal().getId()+"+发出的请求，数据量："+request.getData()+"剩余的缓存量："+queue.getRemainCapcity());
                     currentRequestNeedTime=(request.getData()/frequent)*1000;
-                    totalProcessTime+=currentRequestNeedTime;
+                    //调度1000个任务后才开始计时
+                    if(Help.timerSwitch){
+                        totalProcessTime+=currentRequestNeedTime;
+                    }
                     double lastTime=System.currentTimeMillis();
                     for (;;){
                         if(currentRequestNeedTime<=0){

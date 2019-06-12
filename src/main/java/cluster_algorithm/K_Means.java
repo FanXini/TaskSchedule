@@ -7,7 +7,7 @@ import java.util.*;
 
 public class K_Means implements ClusterAlgorithm {
 
-    private int maxIterations=20;
+    private int maxIterations=10;
 
     private class RequestComparator implements Comparator<Request> {
         @Override
