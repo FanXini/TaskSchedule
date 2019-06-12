@@ -27,9 +27,6 @@ public abstract class AbstractDecision implements Decision {
     }
 
     protected void  addCost(float cost){
-        if(taskCount>=1000){
-            Help.timerSwitch=true;
-            Help.toltalCost+=cost;
-        }
+            Help.addCost(cost);
     }
 }

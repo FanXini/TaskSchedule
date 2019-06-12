@@ -14,14 +14,14 @@ public class Global {
 
 
     //终端设备数量
-    public final static int TERMINLNUM=10;
+    public final static int TERMINLNUM=100;
 
     //边缘节点数量
     public final static int EDGENODENUM=10;
 
 
     //每个终端发出的请求数量
-    public final static int REQUESTNUM=500;
+    public final static int REQUESTNUM=200;
 
     //终端设备处理能力
     public final static float TERMINALFREQUENCE=500; //单位时间内能处理100kb字节
